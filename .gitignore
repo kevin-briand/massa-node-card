@@ -1,41 +1,12 @@
-lib-cov
-*.seed
+node_modules/
+.yarn/
+yarn.lock
+tmpdir/
 *.log
-*.csv
-*.dat
-*.out
-*.pid
-*.gz
-*.swp
-
-pids
-logs
-results
-tmp
-
-# Build
-public/css/main.css
-
-# Coverage reports
-coverage
-
-# API keys and secrets
-.env
-
-# Dependency directory
-node_modules
-bower_components
-
-# Editors
-.idea
+.DS_Store
+.idea/
 *.iml
 
-# OS metadata
-.DS_Store
-Thumbs.db
-
-# Ignore built ts files
-dist/**/*
-
-# ignore yarn.lock
-yarn.lock
+# Only the bundle is published (HACS reads it from the repository or the release)
+dist/*
+!dist/massa-node-card.js

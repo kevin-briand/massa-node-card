@@ -1,47 +1,56 @@
-import { LitElement, html, type TemplateResult } from 'lit'
-import { property, customElement, state } from 'lit/decorators.js'
-import { type HomeAssistant, type LovelaceCardEditor, fireEvent } from 'custom-card-helpers'
-import { type CardConfig } from './types'
+import { LitElement, html, nothing, type TemplateResult } from 'lit'
+import { customElement, property, state } from 'lit/decorators.js'
 import { localize } from '../localize/localize'
-import { defaultCardConfig, massaNodeCardEditor } from './consts'
+import { DEFAULT_CONFIG, EDITOR_TAG, INTEGRATION } from './consts'
+import type { CardConfig, HomeAssistant } from './types'
 
-@customElement(massaNodeCardEditor)
-export class MassaNodeCardEditor extends LitElement implements LovelaceCardEditor {
-  @property({ attribute: false })
-  public hass?: HomeAssistant
+const SCHEMA = [
+  { name: 'title', selector: { text: {} } },
+  { name: 'device_id', selector: { device: { filter: { integration: INTEGRATION } } } },
+  { name: 'show_history', selector: { boolean: {} } },
+  { name: 'show_wallet', selector: { boolean: {} } }
+]
 
-  @state()
-  private _config?: Partial<CardConfig>
+@customElement(EDITOR_TAG)
+export class MassaNodeCardEditor extends LitElement {
+  @property({ attribute: false }) public hass?: HomeAssistant
 
-  public setConfig (config?: Partial<CardConfig>): void {
-    this._config = { ...defaultCardConfig, ...config }
+  @state() private _config?: CardConfig
+
+  public setConfig (config: CardConfig): void {
+    this._config = config
   }
 
-  protected render (): TemplateResult {
-    if (this.hass == null) return html``
+  protected render (): TemplateResult | typeof nothing {
+    if (this.hass == null || this._config == null) return nothing
     return html`
-      <div class="card-config">
-        <div class="grid">
-          <ha-formfield .label=${localize('editor.showWalletAmount', this.hass.language)}>
-            <ha-switch
-              .checked=${this._config?.show_wallet_amount}
-              @change=${(ev: Event) => { this._updateConfig('show_wallet_amount', (ev.target as HTMLInputElement).checked) }}
-            ></ha-switch
-          ></ha-formfield>
-        </div>
-      </div>
+      <ha-form
+        .hass=${this.hass}
+        .data=${{ ...DEFAULT_CONFIG, ...this._config }}
+        .schema=${SCHEMA}
+        .computeLabel=${(field: { name: string }) =>
+          localize(`editor.${field.name}`, this.hass?.locale?.language ?? this.hass?.language ?? 'en')}
+        @value-changed=${this._valueChanged}
+      ></ha-form>
     `
   }
 
-  private _updateConfig (property: string, value: any) {
-    if (this.hass == null) return
-    this._config = { ...this._config, [property]: value }
-    fireEvent(this, 'config-changed', { config: this._config })
+  private _valueChanged (ev: CustomEvent<{ value: CardConfig }>): void {
+    ev.stopPropagation()
+    const config: Record<string, unknown> = { ...ev.detail.value }
+    // Keep the YAML short: drop empty values.
+    for (const key of Object.keys(config)) {
+      if (config[key] === '' || config[key] === undefined) delete config[key]
+    }
+    this._config = config as unknown as CardConfig
+    this.dispatchEvent(
+      new CustomEvent('config-changed', { detail: { config }, bubbles: true, composed: true })
+    )
   }
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    [massaNodeCardEditor]: MassaNodeCardEditor
+    [EDITOR_TAG]: MassaNodeCardEditor
   }
 }

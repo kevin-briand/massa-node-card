@@ -1,40 +1,28 @@
-import * as en from './languages/en.json'
-import * as fr from './languages/fr.json'
+import en from './languages/en.json'
+import fr from './languages/fr.json'
 
-import IntlMessageFormat from 'intl-messageformat'
+type Dictionary = { [key: string]: string | Dictionary }
 
-const LANGUAGES: any = {
-  en,
-  fr
+const LANGUAGES: Record<string, Dictionary> = { en, fr }
+
+function lookup (dictionary: Dictionary | undefined, key: string): string | undefined {
+  let node: string | Dictionary | undefined = dictionary
+  for (const part of key.split('.')) {
+    if (node === undefined || typeof node === 'string') return undefined
+    node = node[part]
+  }
+  return typeof node === 'string' ? node : undefined
 }
 
-export function localize (string: string, language: string, ...args: any[]): string {
-  const lang = language.replace(/['"]+/g, '')
-
-  let translated: string
-
-  try {
-    translated = string.split('.').reduce((o, i) => o[i], LANGUAGES[lang])
-  } catch (e) {
-    translated = string.split('.').reduce((o, i) => o[i], LANGUAGES.en)
-  }
-
-  if (translated === undefined) translated = string.split('.').reduce((o, i) => o[i], LANGUAGES.en)
-
-  if (args.length === 0) return translated
-
-    type arg = Record<string, any>
-    const argObject: arg = {}
-    for (let i = 0; i < args.length; i += 2) {
-      let key = args[i]
-      key = key.replace(/^{([^}]+)?}$/, '$1')
-      argObject[key] = args[i + 1]
-    }
-
-    try {
-      const message = new IntlMessageFormat(translated, language)
-      return message.format(argObject) as string
-    } catch (err) {
-      return `Translation ${String(err)}`
-    }
+/** Translate `key` (dot separated) and replace `{name}` placeholders with `vars`. */
+export function localize (
+  key: string,
+  language: string,
+  vars: Record<string, string | number> = {}
+): string {
+  const lang = language.split('-')[0]
+  const template = lookup(LANGUAGES[lang], key) ?? lookup(LANGUAGES.en, key) ?? key
+  return template.replace(/\{(\w+)\}/g, (match, name: string) =>
+    name in vars ? String(vars[name]) : match
+  )
 }

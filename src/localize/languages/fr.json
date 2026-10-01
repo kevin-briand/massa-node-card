@@ -1,18 +1,26 @@
 {
-  "status": "Status",
-  "activeRolls": "Rolls actif",
-  "blockProducedMissed": "Bloc produit/manqué(6 derniers cycles)",
-  "walletAmount": "Montant du portefeuille (rolls inclus)",
-  "currentPrice": "Prix actuel",
-  "totalAmount": "Montant total",
-  "dailyEarning": "Gain du jour",
-  "dailyEarningHistory": "Historique de gain journalier",
-  "average": "Moyenne",
+  "title": "Nœud Massa",
   "online": "En ligne",
   "offline": "Hors ligne",
-  "sensorNotFound": "Capteur non trouvé, l'intégration massa node est-elle installé ?",
+  "offlineSince": "Hors ligne depuis {time}",
+  "unknown": "Inconnu",
+  "gainOfDay": "Gain du jour",
+  "average": "{value} par jour en moyenne sur {days} jours",
+  "noHistory": "L'historique journalier apparaît après la première journée complète.",
+  "activeRolls": "Rolls actifs",
+  "price": "Prix du MAS",
+  "cycle": "Cycle",
+  "blocks": "Blocs sur les cycles récents",
+  "produced": "{count} produits",
+  "missed": "{count} manqués",
+  "noBlocks": "Aucun bloc attribué pour l'instant",
+  "wallet": "Portefeuille",
+  "walletDetail": "{balance} disponibles, {rolls} rolls",
+  "notFound": "Aucune entité Massa Node trouvée. Ajoutez l'intégration Massa Node dans Paramètres > Appareils et services, puis rechargez la page.",
   "editor": {
-    "showWalletAmount": "Afficher le montant du portefeuille",
-    "integrationNotFound": "Impossible d'établir une connection avec l'intégration Massa Node. Veuillez vérifier si il est bien installé et en fonction."
+    "title": "Titre",
+    "device_id": "Nœud Massa",
+    "show_wallet": "Afficher le montant du portefeuille",
+    "show_history": "Afficher l'historique journalier"
   }
 }

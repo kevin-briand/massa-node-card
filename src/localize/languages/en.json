@@ -1,18 +1,26 @@
 {
-  "status": "Status",
-  "activeRolls": "Active rolls",
-  "blockProducedMissed": "Block produced/missed(6 last cycles)",
-  "walletAmount": "Wallet amount (rolls included)",
-  "currentPrice": "Current price",
-  "totalAmount": "total amount",
-  "dailyEarning": "Daily earning",
-  "dailyEarningHistory": "Daily earning history",
-  "average": "Average",
+  "title": "Massa node",
   "online": "Online",
   "offline": "Offline",
-  "sensorNotFound": "Sensor not found, the massa node integration is installed ?",
+  "offlineSince": "Offline since {time}",
+  "unknown": "Unknown",
+  "gainOfDay": "Gain of the day",
+  "average": "{value} per day on average over {days} days",
+  "noHistory": "The daily history appears after the first full day.",
+  "activeRolls": "Active rolls",
+  "price": "MAS price",
+  "cycle": "Cycle",
+  "blocks": "Blocks over the recent cycles",
+  "produced": "{count} produced",
+  "missed": "{count} missed",
+  "noBlocks": "No block assigned yet",
+  "wallet": "Wallet",
+  "walletDetail": "{balance} available, {rolls} rolls",
+  "notFound": "No Massa Node entities found. Add the Massa Node integration in Settings > Devices & services, then reload this page.",
   "editor": {
-    "showWalletAmount": "Show wallet amount",
-    "integrationNotFound": "Could not establish a connection with the massa node integration. Please check if it is installed and running."
+    "title": "Title",
+    "device_id": "Massa node",
+    "show_wallet": "Show the wallet amount",
+    "show_history": "Show the daily history"
   }
 }
